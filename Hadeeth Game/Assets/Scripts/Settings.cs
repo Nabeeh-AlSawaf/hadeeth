@@ -11,7 +11,11 @@ public class Settings
     public bool Sound;
     public bool Arabic;
     public bool Graphics;
-    public double example;
+    public float example;
 
+    public override string ToString()
+    {
+        return $"{{{nameof(MuteMusic)}={MuteMusic.ToString()}, {nameof(MuteAll)}={MuteAll.ToString()}, {nameof(Sound)}={Sound.ToString()}, {nameof(Arabic)}={Arabic.ToString()}, {nameof(Graphics)}={Graphics.ToString()}, {nameof(example)}={example.ToString()}}}";
+    }
 }
 
