@@ -13,6 +13,7 @@ public class V_MainMenu : MonoBehaviour
     public GameObject languagePanel;
     public GameObject videoPanel;
     public GameObject blurLayer;
+    public GameObject GlobalVars;
     public Toggle toggle;
     public Toggle MuteMusic;
     public Toggle MuteAll;
@@ -20,20 +21,26 @@ public class V_MainMenu : MonoBehaviour
     public Toggle Arabic;
     public Toggle Graphics;
     public Slider example;
+    Settings settings = new Settings();
+
     #endregion
     void Start()
     {
         InitializeSettings();
+        DontDestroyOnLoad(GlobalVars);
     }
     public void InitializeSettings()
     {
-        string jsonResult;
-        if (File.Exists(Application.persistentDataPath + "//Settings.json"))
-        {
-            jsonResult = File.ReadAllText(Application.persistentDataPath + "//Settings.json");
-            Settings settings = JsonUtility.FromJson<Settings>(jsonResult);
+        M_MainMenu.InitializeSettings(ref settings);
+
             MuteMusic.isOn = settings.MuteMusic;
-        }
+            MuteAll.isOn = settings.MuteAll;
+            Sound.isOn = settings.Sound;
+            Arabic.isOn = settings.Arabic;
+            Graphics.isOn = settings.Graphics;
+            example.value = settings.example;
+            GlobalVariables.settings = settings;
+        
     }
 
     public void ClickQuit()
@@ -103,8 +110,22 @@ public class V_MainMenu : MonoBehaviour
     }
     public void ClickConfirm()
     {
-        string json = "{MuteMusic }";
-        File.WriteAllText(Application.persistentDataPath + "//Settings.json", json);
+        //Debug.Log("saving " + MuteMusic.isOn);
+        // json file to save (as settings file)
+        //ToLower cause json only accept lower case letters
+
+        string json = "{ " +
+            "\"MuteMusic\": " + MuteMusic.isOn.ToString().ToLower() +
+            ",  \"MuteAll\":" + MuteAll.isOn.ToString().ToLower() +
+            ",  \"Sound\":" + Sound.isOn.ToString().ToLower() +
+            ",  \"Arabic\": " + Arabic.isOn.ToString().ToLower() +
+            ",  \"Graphics\": " + Graphics.isOn.ToString().ToLower() +
+            ",  \"example\":" + example.value +
+            "}";
+
+        //save to storage and to global vars
+        GlobalVariables.settings =  M_MainMenu.SaveSettings(json);
+
         blurLayer.SetActive(false);
         settingsPanel.SetActive(false);
     }
