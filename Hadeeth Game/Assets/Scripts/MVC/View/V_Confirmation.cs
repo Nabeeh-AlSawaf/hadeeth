@@ -8,10 +8,13 @@ public class V_Confirmation : MonoBehaviour
     #region Private Vars
     private static Action Action { get; set; }
     private static GameObject ConfirmationWindow { get; set; }
+    private static GameObject BlurLayer { get; set; }
+
     #endregion
     void Awake()
     {
-        ConfirmationWindow = this.gameObject.transform.GetChild(0).gameObject;
+        ConfirmationWindow = this.gameObject.transform.GetChild(1).gameObject;
+        BlurLayer = this.gameObject.transform.GetChild(0).gameObject;
     }
     /// <summary>
     /// The function to be called using the unity buttons
@@ -25,6 +28,8 @@ public class V_Confirmation : MonoBehaviour
 
         Action = null;
         ConfirmationWindow.SetActive(false);
+        BlurLayer.SetActive(false);
+
     }
 
     /// <summary>
@@ -37,7 +42,7 @@ public class V_Confirmation : MonoBehaviour
     {
         Action = action;
         ConfirmationWindow.SetActive(true);
-
+        BlurLayer.SetActive(true);
         //Dialog is the 2nd Text in the Texts game object (looks bad T^T)
         ConfirmationWindow.transform.GetChild(0).GetChild(1).GetComponent<ArabicText>().Text = dialog;
     }
