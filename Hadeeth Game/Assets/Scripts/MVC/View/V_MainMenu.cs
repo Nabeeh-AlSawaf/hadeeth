@@ -57,7 +57,7 @@ public class V_MainMenu : MonoBehaviour
     }
     public void ClickStart()
     {
-        SceneManager.LoadScene("Start");
+        SceneManager.LoadScene("MainScene");
     }
     public void ClickSettings()
     {
