@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -24,6 +25,9 @@ public class V_MainMenu : MonoBehaviour
     Settings settings = new Settings();
 
     #endregion
+    #region Private vars
+    private Action CurrentAction { get; set; }
+    #endregion
     void Start()
     {
         InitializeSettings();
@@ -45,11 +49,15 @@ public class V_MainMenu : MonoBehaviour
 
     public void ClickQuit()
     {
-        Application.Quit();
+        CurrentAction = delegate
+        {
+            Application.Quit();
+        };
+        V_Confirmation.InitializeMessage(CurrentAction, "Are you sure?");
     }
     public void ClickStart()
     {
-        SceneManager.LoadScene("Start");
+        SceneManager.LoadScene("MainScene");
     }
     public void ClickSettings()
     {
@@ -104,6 +112,7 @@ public class V_MainMenu : MonoBehaviour
     }
     public void ClickVideo()
     {
+
         soundPanel.SetActive(false);
         languagePanel.SetActive(false);
         videoPanel.SetActive(true);
@@ -114,21 +123,29 @@ public class V_MainMenu : MonoBehaviour
         // json file to save (as settings file)
         //ToLower cause json only accept lower case letters
 
-        string json = "{ " +
-            "\"MuteMusic\": " + MuteMusic.isOn.ToString().ToLower() +
-            ",  \"MuteAll\":" + MuteAll.isOn.ToString().ToLower() +
-            ",  \"Sound\":" + Sound.isOn.ToString().ToLower() +
-            ",  \"Arabic\": " + Arabic.isOn.ToString().ToLower() +
-            ",  \"Graphics\": " + Graphics.isOn.ToString().ToLower() +
-            ",  \"example\":" + example.value +
-            "}";
+        CurrentAction = delegate
+          {
+              string json = "{ " +
+         "\"MuteMusic\": " + MuteMusic.isOn.ToString().ToLower() +
+         ",  \"MuteAll\":" + MuteAll.isOn.ToString().ToLower() +
+         ",  \"Sound\":" + Sound.isOn.ToString().ToLower() +
+         ",  \"Arabic\": " + Arabic.isOn.ToString().ToLower() +
+         ",  \"Graphics\": " + Graphics.isOn.ToString().ToLower() +
+         ",  \"example\":" + example.value +
+         "}";
 
-        //save to storage and to global vars
-        GlobalVariables.settings =  M_MainMenu.SaveSettings(json);
+              //save to storage and to global vars
+              GlobalVariables.settings = M_MainMenu.SaveSettings(json);
 
-        blurLayer.SetActive(false);
-        settingsPanel.SetActive(false);
+              blurLayer.SetActive(false);
+              settingsPanel.SetActive(false);
+          };
+        
+        V_Confirmation.InitializeMessage(CurrentAction, "Are you sure?");
+        
     }
+
+
 
 
 }
